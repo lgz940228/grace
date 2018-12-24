@@ -25,7 +25,7 @@ public class DeptController {
     }
 
     @RequestMapping(value = "/dept/get/{id}",method = RequestMethod.GET)
-    public Dept findDeptById(@PathVariable("id") Integer deptId){
+    public Dept findDeptById(@PathVariable("id") Long deptId){
         return deptService.findById(deptId);
     }
 
