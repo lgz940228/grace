@@ -11,6 +11,7 @@
         <module>grace-api</module>
         <module>grace-provider-dept-8001</module>
         <module>grace-consumer-dept-80</module>
+        <module>grace-eureka-7001</module>
     </modules>
     <packaging>pom</packaging>
 
