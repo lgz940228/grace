@@ -17,8 +17,10 @@ import java.util.List;
 public class DeptController {
 
     @Autowired
-    public DeptService deptService;
-
+    private DeptService deptService;
+    /*@Autowired
+    private DiscoveryClient client;
+*/
     @RequestMapping(value = "/dept/add",method = RequestMethod.GET)
     public boolean add(Dept dept){
         return deptService.addDept(dept);
@@ -33,4 +35,17 @@ public class DeptController {
     public List<Dept> findDeptAll(){
         return deptService.findAll();
     }
+    /*@RequestMapping(value = "/dept/discovery", method = RequestMethod.GET)
+    public Object discovery()
+    {
+        List<String> list = client.getServices();
+        System.out.println("**********" + list);
+
+        List<ServiceInstance> srvList = client.getInstances("MICROSERVICECLOUD-DEPT");
+        for (ServiceInstance element : srvList) {
+            System.out.println(element.getServiceId() + "\t" + element.getHost() + "\t" + element.getPort() + "\t"
+                    + element.getUri());
+        }
+        return this.client;
+    }*/
 }
