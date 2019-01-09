@@ -29,13 +29,13 @@ public class ImageTest2 {
         //g2.setColor(new Color(0,0,0));
         //g2.setBackground(Color.black);
         //g2.setPaint(new Color(0,0,0));
-        g2.fill(new RoundRectangle2D.Float(0, 0, w, h, w/10,
+        g2.fill(new RoundRectangle2D.Float(w * 2 / 5, h * 2 / 5, w * 2 / 10, h * 2 / 10,w/10,
                 h/10));
         // ... then compositing the image on top,
         // using the white shape from above as alpha source
         g2.setComposite(AlphaComposite.SrcAtop);
         //g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_ATOP, 1.0f));
-        g2.drawImage(image, 0,0, null);
+        g2.drawImage(image, w * 2 / 5, h * 2 / 5, w * 2 / 10, h * 2 / 10,null);
         g2.dispose();
         ImageIO.write(output, "png", new File("E:\\test2.png"));
     }
