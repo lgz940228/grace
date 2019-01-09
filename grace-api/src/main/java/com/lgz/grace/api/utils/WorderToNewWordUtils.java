@@ -1,9 +1,19 @@
 package com.lgz.grace.api.utils;
 
+import com.lowagie.text.FontFactory;
+import com.lowagie.text.pdf.BaseFont;
+import fr.opensagres.xdocreport.document.IXDocReport;
+import fr.opensagres.xdocreport.document.registry.XDocReportRegistry;
+import fr.opensagres.xdocreport.itext.extension.font.IFontProvider;
+import fr.opensagres.xdocreport.template.TemplateEngineKind;
+import fr.opensagres.xdocreport.template.formatter.FieldsMetadata;
 import org.apache.poi.POIXMLDocument;
+import org.apache.poi.xwpf.converter.pdf.PdfConverter;
+import org.apache.poi.xwpf.converter.pdf.PdfOptions;
 import org.apache.poi.xwpf.usermodel.*;
 
-import java.io.IOException;
+import java.awt.*;
+import java.io.*;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -24,6 +34,55 @@ public class WorderToNewWordUtils {
         pictureType.put(".png", XWPFDocument.PICTURE_TYPE_PNG);
     }
 
+
+    /**
+     * 渲染
+     *
+     * @param inputUrl
+     * @param template
+     * @param data
+     * @return
+     */
+    public static OutputStream render(final String inputUrl, final File template, Map<String, String> data) {
+        InputStream in = null;
+        try {
+            in = new FileInputStream(template);
+            IXDocReport report = XDocReportRegistry.getRegistry().loadReport(in, TemplateEngineKind.Velocity);
+            report.setFieldsMetadata(new FieldsMetadata());
+
+//            Options options = Options.getTo(ConverterTypeTo.PDF).via(ConverterTypeVia.XWPF);
+            PdfOptions pdfOptions = PdfOptions.create().fontProvider(new IFontProvider() {
+                //设置字体
+                @Override
+                public com.lowagie.text.Font getFont(String familyName, String encoding, float size, int style, Color color) {
+                    try {
+
+                        String fontPath = WorderToNewWordUtils.class.getResource("/").getPath() + "template" + File.separator + "SimSun.ttf";
+                        com.lowagie.text.Font font = FontFactory.getFont(fontPath, encoding, BaseFont.NOT_EMBEDDED);
+                        return font;
+                    } catch (Exception e) {
+                        //LOGGER.error("获取项目字体文件 error:", e);
+                        return FontFactory.getFont(familyName, encoding, size, style, color);
+                    }
+                }
+            });
+//            options.subOptions(pdfOptions);
+            OutputStream outputStream = new ByteArrayOutputStream();
+            XWPFDocument doc = changWord(inputUrl, data, null);
+            PdfConverter.getInstance().convert(doc, outputStream, pdfOptions);
+//            report.convert(data, options, outputStream);
+            return outputStream;
+        } catch (Exception e) {
+            //LOGGER.error("render error:", e);
+            return null;
+        }finally {
+            try {
+                in.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
     /**
      * 根据模板生成新word文档
      * 判断表格是需要替换还是需要插入，判断逻辑有$为替换，表格无$为插入
