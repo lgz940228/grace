@@ -9,13 +9,20 @@ import org.apache.http.client.ServiceUnavailableRetryStrategy;
 import org.apache.http.client.config.RequestConfig;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.CloseableHttpResponse;
+import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
+import org.apache.http.config.Registry;
+import org.apache.http.config.RegistryBuilder;
+import org.apache.http.conn.socket.ConnectionSocketFactory;
+import org.apache.http.conn.socket.PlainConnectionSocketFactory;
+import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
 import org.apache.http.entity.mime.MultipartEntityBuilder;
 import org.apache.http.entity.mime.content.InputStreamBody;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.impl.conn.PoolingHttpClientConnectionManager;
 import org.apache.http.message.BasicNameValuePair;
+import org.apache.http.ssl.SSLContexts;
 import org.apache.http.util.EntityUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -42,18 +49,41 @@ public class HttpClientUtil {
     private static volatile RequestConfig requestConfig;
     //private static CloseableHttpClient httpClient = HttpClients.createDefault();
     private static PoolingHttpClientConnectionManager connectionPool;
-
+    /*private static final Registry<ConnectionSocketFactory> r = RegistryBuilder.<ConnectionSocketFactory>create()
+            .register("http", new PlainConnectionSocketFactory())
+            .register("https", SSLConnectionSocketFactory.getSocketFactory())
+            .build();*/
+    private static final ConnectionSocketFactory ssl = new SSLConnectionSocketFactory(SSLContexts.createDefault(),SSLConnectionSocketFactory.ALLOW_ALL_HOSTNAME_VERIFIER);
+    private static final Registry<ConnectionSocketFactory> r = RegistryBuilder.<ConnectionSocketFactory>create()
+            .register("http", new PlainConnectionSocketFactory())
+            .register("https",ssl)
+            .build();
     private static ServiceUnavailableRetryStrategy serviceUnavailableRetryStrategy = new NoSuccessStatusRetryStrategy.Builder().executionCount(3).retryInterval(1000).build();
     private static CloseableHttpClient httpClient = HttpClients.custom().setServiceUnavailableRetryStrategy(serviceUnavailableRetryStrategy).setConnectionManager(connectionPool).build();
 
     static {
         // 设置连接池
-        connectionPool = new PoolingHttpClientConnectionManager();
+        connectionPool = new PoolingHttpClientConnectionManager(r);
         // 设置连接池大小
         connectionPool.setMaxTotal(50);
         connectionPool.setDefaultMaxPerRoute(connectionPool.getMaxTotal());
         // 在提交请求之前 测试连接是否可用
         connectionPool.setValidateAfterInactivity(1000);
+    }
+
+    public static void main(String[] args) throws Exception{
+        HttpGet get = new HttpGet("https://www.baidu.com");
+        CloseableHttpResponse execute = httpClient.execute(get);
+        HttpEntity entity = execute.getEntity();
+        String s = EntityUtils.toString(entity,"UTF8");
+        System.out.println("-------------------------------------------------------");
+        System.out.println("-------------------------------------------------------");
+        System.out.println("-------------------------------------------------------");
+        System.out.println("-------------------------------------------------------");
+        System.out.println(s);
+        execute.close();
+        httpClient.close();
+
     }
 
     public static String sendRequest(String url, String secretKey, SortedMap<String, String> param) {
