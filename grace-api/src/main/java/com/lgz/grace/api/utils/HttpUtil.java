@@ -26,7 +26,7 @@ public class HttpUtil {
                     connectTimeout, readTimeout);
             return str;
         } catch (FrameworkException e) {
-            ExceptionUtil.throwRunTime(e);
+            //ExceptionUtil.throwRunTime(e);
         }
         return null;
     }
@@ -40,7 +40,7 @@ public class HttpUtil {
             str = DefaultHttpClient.doPost(url, params, connectTimeout, readTimeout);
             return str;
         } catch (FrameworkException e) {
-            ExceptionUtil.throwRunTime(e);
+           // ExceptionUtil.throwRunTime(e);
         }
         return null;
     }

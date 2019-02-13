@@ -43,7 +43,8 @@ public class MethodInvoker {
         try {
             return (T) method.invoke(obj, args);
         } catch (Exception e) {
-            throw ExceptionUtil.uncheckedAndWrap(e);
+            //throw ExceptionUtil.uncheckedAndWrap(e);
+            return null;
         }
     }
 

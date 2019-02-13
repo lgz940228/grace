@@ -8,6 +8,7 @@ import org.apache.http.conn.socket.PlainConnectionSocketFactory;
 import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.impl.conn.PoolingHttpClientConnectionManager;
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.junit.Test;
@@ -63,5 +64,12 @@ public class Teat {
         HttpClients.custom()
                 .setConnectionManager(cm)
                 .build();
+    }
+
+    @Test
+    public void ecxcel(){
+        HSSFWorkbook wb = new HSSFWorkbook();
+        //sheet名
+        String sheetName = "专家列表";
     }
 }

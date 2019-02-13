@@ -27,7 +27,7 @@ public class FileUtil {
             readSize = acc.read(bytes, 0, size);
             return new String(bytes, 0, readSize, code);
         } catch (Exception e) {
-            ExceptionUtil.throwRunTime(e);
+           // ExceptionUtil.throwRunTime(e);
         } finally {
             if (acc != null) {
                 try {

@@ -172,7 +172,8 @@ public class ReflectionUtil {
         try {
             return (T) method.invoke(obj, args);
         } catch (Exception e) {
-            throw ExceptionUtil.uncheckedAndWrap(e);
+            //throw ExceptionUtil.uncheckedAndWrap(e);
+            return null;
         }
     }
 
@@ -202,6 +203,7 @@ public class ReflectionUtil {
         } else if (e instanceof RuntimeException) {
             return (RuntimeException) e;
         }
-        return new ExceptionUtil.UncheckedException(e);
+        //return new ExceptionUtil.UncheckedException(e);
+        return null;
     }
 }
