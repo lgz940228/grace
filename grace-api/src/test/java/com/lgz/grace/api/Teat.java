@@ -34,9 +34,7 @@ public class Teat {
             Sheet sheetm = excelm.getSheetAt(0);
             Row rowm = sheetm.getRow(0);
             CellStyle cellStyle = rowm.getCell(0).getCellStyle();
-
             row.createCell(0).setCellValue("序列号");
-
             excel.write(fileOut);
         }catch (Exception io){
             io.printStackTrace();
