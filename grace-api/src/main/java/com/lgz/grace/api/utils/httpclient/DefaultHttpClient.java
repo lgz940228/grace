@@ -319,4 +319,28 @@ public class DefaultHttpClient {
 
         return result;
     }
+
+    /**
+     * URL url = new URL(pdfUrl);
+     //连接url
+     HttpURLConnection conn = (HttpURLConnection)url.openConnection();
+     //得到输入流
+     InputStream inputStream = conn.getInputStream();
+    String enName = new String(pdfTitle.getBytes("gbk"),"ISO-8859-1");
+    //设置响应头
+    response.setHeader("content-disposition","attachment;filename=" + enName);
+    response.setHeader("content-type", "application/pdf");
+    //得到输出流，输出文件
+    ServletOutputStream outputStream = response.getOutputStream();
+    int len;
+    byte[] bs = new byte[1024];
+     while((len = inputStream.read(bs)) != -1){
+        outputStream.write(bs, 0, len);
+    }
+    //关闭输入输出流
+    inputStream.close();
+    outputStream.close();
+    //关闭链接
+    conn.disconnect();
+     */
 }
